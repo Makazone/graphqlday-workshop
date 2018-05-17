@@ -3,7 +3,6 @@ const { Prisma } = require('prisma-binding')
 
 const resolvers = {
   Query: {
-    info: () => `This is the API for a simple blogging application.`,
     posts: (_, args, context, info) => {
       return context.db.query.posts(
         {
