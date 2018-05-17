@@ -1,4 +1,28 @@
-# Step 3
+Воркшоп по созданию GraphQL сервера на Node.JS
+
+Поздравляю! Это последний шаг, только вперед!
+
+## ФАК
+
+1.  Гит не видит нужных веток
+
+```
+git fetch origin
+```
+
+2.  Как подсмотреть решение, не теряя прогресс?
+
+```bash
+# Текущая ветка git checkout step4-start
+git stash # сохраните изменения
+git checkout step4 # перейдите в ветку с решением
+git checkout step4-start # вернитесь
+git stash apply # загрузите сохранение
+```
+
+---
+
+# Step 4
 
 Go back to the [`master`](https://github.com/nikolasburk/graphqlday-workshop) branch.
 
@@ -30,8 +54,8 @@ graphql playground
 
 The Playground now allows to work with both GraphQL APIs side-by-side. It receives its information about the corresponding endpoints and schemas from the configuration in [`.graphqlconfig.yml`](.graphqlconfig.yml):
 
-- `app`: The application layer built with `graphql-yoga`
-- `database` The database layer configured with Prisma
+* `app`: The application layer built with `graphql-yoga`
+* `database` The database layer configured with Prisma
 
 ## Sample queries/mutations
 
@@ -61,7 +85,6 @@ query {
 }
 ```
 
-
 ```graphql
 query {
   post(id: "post-0") {
@@ -89,13 +112,7 @@ mutation {
 
 ```graphql
 query {
-  posts(where: {
-    OR: [{
-      title_contains: "QL"
-      }, {
-      content_contains: "QL"
-    }]
-  }) {
+  posts(where: { OR: [{ title_contains: "QL" }, { content_contains: "QL" }] }) {
     id
     title
     content
@@ -106,9 +123,7 @@ query {
 
 ```graphql
 query {
-  post(where: {
-    id: "__POST_ID__"
-  }) {
+  post(where: { id: "__POST_ID__" }) {
     id
     title
     content
