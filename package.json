@@ -5,7 +5,7 @@
   "author": "Nikolas Burk <nikolas.burk@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "graphql-yoga": "^1.8.5",
-    "prisma-binding": "^1.5.17"
+    "graphql-yoga": "^1.13.1",
+    "prisma-binding": "^2.0.0"
   }
 }
