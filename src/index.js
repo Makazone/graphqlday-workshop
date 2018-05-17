@@ -1,52 +1,46 @@
-const { GraphQLServer } = require('graphql-yoga')
-const { Prisma } = require('prisma-binding')
+const { GraphQLServer } = require("graphql-yoga");
+const { Prisma } = require("prisma-binding");
 
 const resolvers = {
   Query: {
-    info: () => `This is the API for a simple blogging application.`,
     posts: (_, args, context, info) => {
-      return context.db.query.posts(
+      return context.prisma.query.posts(
         {
           where: {
             OR: [
-              {
-                title_contains: args.searchString,
-              },
-              {
-                content_contains: args.searchString,
-              },
-            ],
-          },
+              { title_contains: args.searchString },
+              { content_contains: args.searchString }
+            ]
+          }
         },
-        info,
-      )
+        info
+      );
     },
-    // post: (_, args, context, info) => {
-    // }
-  },
-  // Mutation: {
-  //   createDraft: (_, args, context, info) => {
-  //   },
-  //   publish: (_, args, context, info) => {
-  //   },
-  //   deletePost: (_, args, context, info) => {
-  //   }
-  // }
-}
+    user: (_, args, context, info) => {
+      return context.prisma.query.user(
+        {
+          where: {
+            id: args.id
+          }
+        },
+        info
+      );
+    }
+  }
+};
 
 const server = new GraphQLServer({
-  typeDefs: './src/schema.graphql',
+  typeDefs: "src/schema.graphql",
   resolvers,
   context: req => ({
     ...req,
-    db: new Prisma({
-      typeDefs: './src/generated/prisma.graphql',
-      endpoint: 'http://localhost:4466/graphqlday-demo/dev',
-      secret: 'mysecret123',
-      debug: true,
-    }),
-  }),
-})
+    prisma: new Prisma({
+      typeDefs: "src/generated/prisma.graphql",
+      endpoint: "https://eu1.prisma.sh/makar-7af142/my-blog/dev"
+    })
+  })
+});
+
 server.start(() =>
-  console.log(`GraphQL server is running on http://localhost:4000`),
-)
+  console.log(`GraphQL server is running on http://localhost:4000`)
+);

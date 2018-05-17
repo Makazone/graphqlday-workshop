@@ -61,14 +61,26 @@ query {
 }
 ```
 
+
+```graphql
+query {
+  post(id: "post-0") {
+    id
+    title
+    content
+    published
+  }
+}
+```
+
 ### Database layer (Prisma)
 
 ```graphql
 mutation {
-  createPost(data: {
-    title: "GraphQL is great"
-    content: "It really is"
-  }) {
+  createDraft(
+    title: "GraphQL Bindings"
+    content: "Reuse and compose GraphQL APIs"
+  ) {
     id
     published
   }
