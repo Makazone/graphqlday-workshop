@@ -1,10 +1,17 @@
 {
   "name": "graphqlday-workshop",
   "version": "1.0.0",
-  "repository": "git@github.com:nikolasburk/graphqlday-workshop.git",
-  "author": "Nikolas Burk <nikolas.burk@gmail.com>",
+  "author": "Nikolas Burk + Makar Stetsenko",
   "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js",
+    "update-prisma-sdl": "graphql get-schema --project prisma"
+  },
   "dependencies": {
-    "graphql-yoga": "^1.8.5"
+    "graphql-yoga": "^1.8.5",
+    "prisma-binding": "^2.0.0"
+  },
+  "devDependencies": {
+    "graphql-cli": "^2.16.0"
   }
 }

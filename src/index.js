@@ -1,62 +1,46 @@
-const { GraphQLServer } = require('graphql-yoga')
-
-const postData = [
-  {
-    id: 'post-0',
-    title: '',
-    content: '',
-    published: false,
-  },
-]
-let idCount = postData.length
+const { GraphQLServer } = require("graphql-yoga");
+const { Prisma } = require("prisma-binding");
 
 const resolvers = {
   Query: {
-    info: () => `This is the API for a simple blogging application.`,
-    posts: (_, args) => {
-      return args.searchString
-        ? postData.filter(
-            post =>
-              post.title.includes(args.searchString) ||
-              post.content.includes(args.searchString),
-          )
-        : postData
+    posts: (_, args, context, info) => {
+      return context.prisma.query.posts(
+        {
+          where: {
+            OR: [
+              { title_contains: args.searchString },
+              { content_contains: args.searchString }
+            ]
+          }
+        },
+        info
+      );
     },
-    post: (_, args) => {
-      return postData.find(post => post.id === args.id)
-    }
-  },
-  Mutation: {
-    createDraft: (_, args) => {
-      const newDraft = {
-        id: `post-${idCount++}`,
-        title: args.title,
-        content: args.content,
-        published: false
-      }
-      postData.push(newDraft)
-      return newDraft
-    },
-    publish: (_, args) => {
-      const postToPublish = postData.find(post => post.id === args.id)
-      postToPublish.published = true
-      return postToPublish
-    },
-    deletePost: (_, args) => {
-      const postToDeleteIndex = postData.findIndex(post => post.id === args.id)
-      if (postToDeleteIndex > -1) {
-        const deleted = postData.splice(postToDeleteIndex, 1)
-        return deleted[0]
-      }
-      return null
+    user: (_, args, context, info) => {
+      return context.prisma.query.user(
+        {
+          where: {
+            id: args.id
+          }
+        },
+        info
+      );
     }
   }
-}
+};
 
 const server = new GraphQLServer({
-  typeDefs: './src/schema.graphql',
+  typeDefs: "src/schema.graphql",
   resolvers,
-})
+  context: req => ({
+    ...req,
+    prisma: new Prisma({
+      typeDefs: "src/generated/prisma.graphql",
+      endpoint: "https://eu1.prisma.sh/makar-7af142/my-blog/dev"
+    })
+  })
+});
+
 server.start(() =>
-  console.log(`GraphQL server is running on http://localhost:4000`),
-)
+  console.log(`GraphQL server is running on http://localhost:4000`)
+);
